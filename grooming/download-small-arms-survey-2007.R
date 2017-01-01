@@ -3,6 +3,8 @@ library(purrr)
 library(tabulizer)
 library(ISOcodes)
 
+
+
 # Sys.setenv(JAVA_HOME = "C:/Program Files/Java/jdk1.7.0_79")
 # ghit::install_github(c("ropensci/tabulizerjars", "ropensci/tabulizer"), INSTALL_opts = "--no-multiarch")
 
@@ -38,8 +40,7 @@ sas_orig <- as.data.frame(do.call("rbind", sas2)) %>%
 # ISO3166 <- plyr::rbind.fill(missing, ISO_3166_1)
 # write.csv(ISO3166, "data/conc_iso3166.csv", row.names = FALSE)
 
-ISO3166 <- read.csv("data/conc_iso3166.csv", stringsAsFactors = FALSE,
-                    na.strings = "") # na.strings important otherwise Namibia is an NA!
+ISO3166 <- read_csv("data/conc_iso3166.csv", na = "") # na.strings important otherwise Namibia is an NA!
 
 sas_df2 <- sas_orig  %>%
   # aggregate up UKI
