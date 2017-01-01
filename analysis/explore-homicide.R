@@ -1,9 +1,6 @@
 load("data/indicators.rda")
 
 
-
-library(GGally)
-
 p1 <- ggplot(combined, aes(x = PopCorrectedFirearms, y = Both, label = CountrySAS)) +
   geom_smooth(method = "lm") +
   geom_text_repel(colour = "white") +

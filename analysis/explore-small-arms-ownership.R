@@ -1,12 +1,4 @@
-library(ggplot2)
-library(scales)
-library(tidyverse)
-library(ggrepel)
-
-
-load("data/sas_df.rda")
-
-sas_df %>%
+indicators %>%
   ggplot(aes(x = `GNI (2005$) per capita`, y = `Average firearms per 100 people`, label = Country)) +
   geom_smooth() +
   geom_text_repel(colour = "white") +
