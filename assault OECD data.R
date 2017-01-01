@@ -15,8 +15,6 @@ library(Cairo)
 
 theme_set(theme_grey(base_family = "Calibri"))
 
-setwd("h:/Kay/Documents/jobs n work/MoJ/FV work")
-
 #----------Import and mung the death from assault data---------------
 # load deaths by assault from OECD.Stat
 if(!exists("viol_sdmx")){
@@ -223,7 +221,7 @@ totals4 <- viol %>%
   summarise(Value = mean(Value)) %>%
   arrange(Value)
 
-
+earlier <- 1960 # starting point for chart
 p3 <- viol %>%
   mutate(Unit = str_to_title(gsub("Deaths per 100 000 ", "", Unit)),
          Unit = factor(Unit, levels = c("Females", "Population", "Males"))) %>%
