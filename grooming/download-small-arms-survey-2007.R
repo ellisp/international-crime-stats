@@ -29,8 +29,6 @@ sas_orig <- as.data.frame(do.call("rbind", sas2)) %>%
   spread(variable, value) %>%
   arrange(`Rank by rate of ownership`) 
 
-ISO3166 <- read_csv("data/conc_iso3166.csv", na = "") # na.strings important otherwise Namibia is an NA!
-
 sas_df2 <- sas_orig  %>%
   # aggregate up UKI
   mutate(Country = ifelse(Country %in% c("Northern Ireland", "England & Wales", "Scotland"),

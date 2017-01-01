@@ -1,7 +1,7 @@
 # Prepares versions of international indicators such as GNI, GINI, suicides, homicides
 # Aim is to have a single cross-section data, as close to 2012 as possible.
 
-# Needs ISO3166, created by download-small-arms-survey-2007.R
+# Needs ISO3166, downloaded in .Rprofile
 
 library(WHO)
 library(WDI)
