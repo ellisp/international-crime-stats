@@ -1,41 +1,39 @@
+# Prepares versions of international indicators such as GNI, GINI, suicides, homicides
+
 library(WHO)
 library(WDI)
-library(fuzzyjoin)
-
-codes <- get_codes()
-dim(codes) # 2230 codes
 
 
-codes[grepl("omicide", codes$display), ]
-View(codes[grepl("opulation", codes$display), ])
 
-
+# World Bank data:
 WDIsearch("gini")
+gini_orig <- WDI(indicator = "SI.POV.GINI", start = 2000, end = 2016)
 
-
-
-# VIOLENCE_HOMICIDERATE  # per 100,000
-# MH_12 # age standardised per 100,000
-# SDGSUICIDE # crude  per 100,000
-
-
-suicide_standard <- get_data("MH_12")
-suicide_crude <- get_data("SDGSUICIDE")
-homicide_crude <- get_data("VIOLENCE_HOMICIDERATE")
-homicide_crude$sex <- "Both sexes"
-
-pop <- get_data("WHS9_86")
-gini <- WDI(indicator = "SI.POV.GINI", start = 2000, end = 2016)
-
-gini %>%
+gini <- gini_orig %>%
   rename(gini = SI.POV.GINI) %>%
   filter(!is.na(gini)) %>%
   filter(year %in% 2000:2016) %>%
   # find year closest to 2005
   mutate(yearout = abs(year - 2005)) %>%
-  group_by(country) %>%
+  group_by(iso2c) %>%
   summarise(bestyear = year[yearout == min(yearout)][1],
             gini = gini[year == bestyear])
+
+
+# WHO data:
+codes <- get_codes()
+dim(codes) # 2230 codes
+codes[grepl("omicide", codes$display), ]
+# View(codes[grepl("opulation", codes$display), ])
+# VIOLENCE_HOMICIDERATE  # per 100,000
+# MH_12 # age standardised per 100,000
+# SDGSUICIDE # crude  per 100,000
+suicide_crude <- get_data("SDGSUICIDE")
+homicide_crude <- get_data("VIOLENCE_HOMICIDERATE")
+homicide_crude$sex <- "Both sexes"
+
+pop <- get_data("WHS9_86")
+
 
 
 total_deaths <- rbind(suicide_crude, homicide_crude) %>%
