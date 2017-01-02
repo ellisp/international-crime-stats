@@ -22,6 +22,7 @@ summary(m5b) # interaction effect disappears without South Africa
 summary(m7) # when inequality not in, there is a strong income effect the other way but beware, this is basically just the collinearity with inequality
 AIC(m3, m4, m5)
 
+
 train(log(Suicide) ~ HDI * gini +  log(FirearmsPer100People2005), method = "lm",
       data = SuicideData,
       trControl = trainControl(method = "boot632", number = 500))
@@ -29,7 +30,7 @@ train(log(Suicide) ~ HDI * gini +  log(FirearmsPer100People2005), method = "lm",
 train(log(Suicide) ~ GNPPerCapitaPPP * gini +  log(FirearmsPer100People2005), method = "lm",
       data = SuicideData,
       trControl = trainControl(method = "boot632", number = 500))
-# not as good
+# not quite as good
 
 par(mfrow = c(2, 2)); plot(m5)
 

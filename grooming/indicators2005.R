@@ -15,14 +15,18 @@ targetyear <- 2005
 
 #----------WHO data------------------
 pop <- get_data("WHS9_86")
+alcohol <- get_data("WHOSIS_000011")
 
 who_ind <- pop %>%
   filter(year == 2005) %>%
   # drop regional variables, we only want individual countries:
   filter(!is.na(country)) %>%
-  select(-gho, -publishstate, -year) %>%
+  dplyr::select(-gho, -publishstate, -year) %>%
   rename(Pop2005 = value) %>%
   mutate(Pop2005 =  Pop2005 * 1000) %>%
+  left_join(alcohol[ , c("country", "value")], by = "country") %>%
+  rename(Alcohol = value) %>%
+  mutate(Alcohol = ifelse(Alcohol == "<0.1", 0, as.numeric(Alcohol))) %>%
   mutate(country = gsub("C.te d'Ivoire", "Cote d'Ivoire", country)) %>%
   left_join(ISO3166, by = c("country" = "Name"))
 
