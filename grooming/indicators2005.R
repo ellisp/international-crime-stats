@@ -31,9 +31,14 @@ who_ind <- pop %>%
   left_join(ISO3166, by = c("country" = "Name"))
 
 #---------OECD data--------------
+# select just the target year for suicide and standardised values only
 suicide_ty <- suicide %>%
-  filter(year == targetyear & variable != "Crude") %>%
-  select(-variable, -COU, -year)
+  filter(year == targetyear & variable != "Deaths per 100 000 population (crude rates)") %>%
+  select(-COU, -year) %>%
+  mutate(variable = ifelse(grepl(" female", variable), "FemaleSuicide", variable),
+         variable = ifelse(grepl(" male", variable), "MaleSuicide", variable),
+         variable = ifelse(grepl("population", variable), "Suicide", variable))  %>%
+  spread(variable, value)
 
 #-----------World Bank data-----------------
 # WDIsearch("gini")
