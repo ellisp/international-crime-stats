@@ -26,3 +26,19 @@ The `./data/` folder contains only final, cleaned and concorded analysis-ready d
 
 ### raw_data
 The `./raw_data/` folder contains only untouched downloaded data.  Generally this should have been programmatically downloaded by one of the scripts in `./grooming/` but in some cases they might have been downloaded by hand.
+
+
+### grooming
+The `./grooming/` folder contains scripts that download data (and in some cases save it to the `./raw_data/` folder), tidies, cleans and concords it and saves it in the `./data/` folder.
+
+### analysis
+The `./analysis/` folder contains scripts that perform analysis.  These can be R or .Rmd scripts
+
+### doc
+The `./doc/ folder contains .Rmd and HTML files with documentation.
+
+See also the project [issues](https://github.com/ellisp/international-crime-stats/issues) and project [Wiki](https://github.com/ellisp/international-crime-stats/wiki).
+
+### images
+The `./images/` folder holds images (typically analysis output) that is used in common across the project - for example analytical outputs.
+
