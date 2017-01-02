@@ -15,11 +15,13 @@ This project is for comparative analysis of international statistics on crime.  
 
 ![suicide](/images/suicide-hdi-gini.png)
 
-## Principles for using this repository
+## Using this repository
 
 This project has a [GPL-3 license](LICENSE).
 
 The `./integrate.R` script acts a bit like a make file.  It creates all datasets from original source data, and performs all analysis and documentation that produce persistent artefacts.  Any new analysis or data should be created with their own individual scripts which are then called with `source()` from `integrate.R`.
+
+This README file is an `README.md` markdown file that is built from `README.Rmd` which is an Rmarkdown document.  Don't edit the `.md` file directly - edit the `README.Rmd` file and rebuild it (with the `knit()` command in `integrate.R`).
 
 ### data
 The `./data/` folder contains only final, cleaned and concorded analysis-ready data sets, in either rda or csv format.  

@@ -46,7 +46,7 @@ newdata <- expand.grid(
   FirearmsPer100People2005 = log(mean(indicators2005$FirearmsPer100People2005, na.rm = TRUE))
 )
 
-
+png("images/suicide-hdi-gini.png", 8*600, 8*600, res=600)
 z <- matrix(predict(m5, newdata), nrow = 100)
 par(mfrow = c(1, 1), family = "Calibri")
 with(newdata, image(x, y, z, 
@@ -58,7 +58,7 @@ with(newdata, contour(x, y, z, add = TRUE, labcex = 1, family = "xkcd",
                       levels = levs, labels = round(exp(levs)), col = "white"))
 title(main = "Higher inequality or higher development means lower suicide rates")
 with(indicators2005, text(HDI, gini, round(Suicide), col = "orange", family = "xkcd"))
-
+dev.off()
 
 
 newdata <- expand.grid(
