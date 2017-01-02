@@ -1,5 +1,8 @@
 library(knitr)
 library(rmarkdown)
+library(caret)
+library(boot)
+library(viridis)
 
 # suicide and homicide data
 source("grooming/download-small-arms-survey-2007.R") 

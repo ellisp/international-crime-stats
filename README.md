@@ -11,6 +11,8 @@ output: html_document
 
 This project is for comparative analysis of international statistics on crime.  It examines country-level data on homicide, assault, suicide; in the light of other variables such as Gross National Income, Human Development Index, economic inequality, and civilian firearm ownership.
 
+![suicide](/images/suicide-hdi-gini.png)
+
 ## Principles for using this repository
 
 This project has a [GPL-3 license](LICENSE).
