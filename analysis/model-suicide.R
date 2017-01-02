@@ -83,4 +83,4 @@ with(indicators2005, text(GNPPerCapitaPPP, gini, round(Suicide), col = "orange",
 #=========================sex disag=========================
 smm8 <- lm(log(MaleSuicide) ~ HDI * gini + Alcohol *  log(FirearmsPer100People2005), data = SuicideData)
 summary(smm8)
-
+anova(smm8)
