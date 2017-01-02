@@ -1,7 +1,10 @@
 # Prepares versions of international indicators such as GNI, GINI, suicides, homicides
 # Aim is to have a single cross-section data, as close to 2012 as possible.
 
-# Needs ISO3166, downloaded in .Rprofile
+# Needs:
+# * ISO3166, downloaded in .Rprofile
+# * sas_df2, created in grooming/download-small-arms-survey-2007.R
+# * hdi, created in grooming/import-hdi.R
 
 library(WHO)
 library(WDI)
@@ -70,16 +73,19 @@ gnp <- gnp_orig %>%
             GNPPerCapitaPPP = value[year == gnpyear])
 
 
-#-------------------HDI---------------
-
-
+#---------------UNDP HDI-----------
+hdi2012 <- hdi %>%
+  filter(year == targetyear) %>%
+  select(Alpha_2, HDI)
 
 #--------------combine all together----------------
 indicators2012 <- who_ind %>%
+  select(-year) %>%
   left_join(gini, by = c("Alpha_2" = "iso2c")) %>%
   left_join(gnp, by = c("Alpha_2" = "iso2c")) %>%
   left_join(sas_df2[ , c("Average total all civilian firearms", "Alpha_2")], by = "Alpha_2") %>%
-  mutate(FirearmsPer100People2005 = `Average total all civilian firearms` / Pop2005 * 100)
+  mutate(FirearmsPer100People2005 = `Average total all civilian firearms` / Pop2005 * 100) %>%
+  left_join(hdi2012, by = "Alpha_2") 
 
 save(indicators2012, file = "data/indicators2012.rda")
 

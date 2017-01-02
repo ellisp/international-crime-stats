@@ -1,7 +1,7 @@
-load("data/indicators.rda")
+load("data/indicators2012.rda")
 
 
-p1 <- ggplot(combined, aes(x = PopCorrectedFirearms, y = Both, label = CountrySAS)) +
+p1 <- ggplot(indicators2012, aes(x = FirearmsPer100People2005, y = HomicideAndSuicide, label = Alpha_3)) +
   geom_smooth(method = "lm") +
   geom_text_repel(colour = "white") +
   geom_point() +
@@ -9,11 +9,10 @@ p1 <- ggplot(combined, aes(x = PopCorrectedFirearms, y = Both, label = CountrySA
        y = "Combined suicide and homicides per 100,000")
 p1
 
-
 p1 +  scale_x_log10(breaks = c(1, 10, 100)) +
   scale_y_log10()
 
-p2 <- ggplot(combined, aes(x = PopCorrectedFirearms, y = Suicide, label = CountrySAS)) +
+p2 <- ggplot(indicators2012, aes(x = FirearmsPer100People2005, y = Suicide, label = Alpha_3)) +
   geom_smooth(method = "lm") +
   geom_text_repel(colour = "white") +
   geom_point() +
@@ -25,7 +24,7 @@ p2 +  scale_x_log10(breaks = c(1, 10, 100)) +
   scale_y_log10()
 
 
-p3 <- ggplot(combined, aes(x = PopCorrectedFirearms, y = Homicide, label = CountrySAS)) +
+p3 <- ggplot(indicators2012, aes(x = FirearmsPer100People2005, y = Homicide, label = Alpha_3)) +
   geom_smooth(method = "lm") +
   geom_text_repel(colour = "white") +
   geom_point() +
@@ -37,47 +36,35 @@ p3 +  scale_x_log10(breaks = c(1, 10, 100)) +
   scale_y_log10()
 
 
-combined %>%
-  dplyr::select(GNI, Both:Suicide, PopCorrectedFirearms) %>%
-  ggpairs() +
-  scale_x_log10()
+indicators2012 %>%
+  dplyr::select(GNPPerCapitaPPP, gini, HDI, FirearmsPer100People2005, Homicide, Suicide) %>%
+  ggpairs() 
 
-combined %>%
-  mutate(LogGNI = log(GNI),
-         LogFirearms = log(PopCorrectedFirearms),
+indicators2012 %>%
+  mutate(LogGNI = log(GNPPerCapitaPPP),
+         LogFirearms = log(FirearmsPer100People2005),
          LogHomicide = log(Homicide),
          LogSuicide = log(Suicide)) %>%
-  select(LogGNI, LogFirearms, LogHomicide, LogSuicide) %>%
+  select(LogGNI, HDI, gini, LogFirearms, LogHomicide, LogSuicide) %>%
   ggpairs()
 
 
-#--------------modelling---------------------
-pairs(combined[ , c("GNI", "Both", "PopCorrectedFirearms")])
-pairs(log(combined[ , c("GNI", "Both", "PopCorrectedFirearms")]))
+#--------------modelling homicide---------------------
 
-m1 <- lm(log(Both) ~ log(GNI) + log(PopCorrectedFirearms), data = combined)
+m1 <- lm(log(Homicide) ~ log(GNPPerCapitaPPP) + gini +  log(FirearmsPer100People2005), data = indicators2012)
+m2 <- lm(log(Homicide) ~ HDI + gini +  log(FirearmsPer100People2005), data = indicators2012)
 summary(m1)
-
-m2 <- lm(log(Homicide) ~ log(GNI) + log(PopCorrectedFirearms), data = combined)
 summary(m2)
+AIC(m1, m2)
 
-m3 <- lm(log(Suicide) ~ log(GNI) + log(PopCorrectedFirearms), data = combined)
-summary(m3)
-
-# diagnostics all check out fine
+# diagnostics are fine:
 par(mfrow = c(2, 2))
 plot(m1)
-plot(m2)
-plot(m3)
 
+#---------------modelling suicide----------------
+m3 <- lm(log(Suicide) ~ log(GNPPerCapitaPPP) + gini +  log(FirearmsPer100People2005), data = indicators2012)
+m4 <- lm(log(Suicide) ~ HDI + gini +  log(FirearmsPer100People2005), data = indicators2012)
 
-library(glmnet)
-combined2 <- combined[complete.cases(combined), ]
-y = log(combined2$Homicide)
-x = with(combined2, cbind(log(GNI), log(PopCorrectedFirearms)))
-m4 <- glmnet(y = y, x = x)
+summary(m3)
 summary(m4)
-?glmnet
-plot(m4)
-coef(m4)
-coef(m2)
+AIC(m3, m4)
