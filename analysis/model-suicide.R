@@ -1,6 +1,6 @@
 #---------------modelling suicide----------------
 SuicideData <- indicators2005 %>%
-  select(Suicide, GNPPerCapitaPPP, gini, FirearmsPer100People2005, HDI, country)
+  dplyr::select(Suicide, GNPPerCapitaPPP, gini, FirearmsPer100People2005, HDI, country, Alcohol)
 SuicideData <- SuicideData[complete.cases(SuicideData), ]
 
 m3 <- lm(log(Suicide) ~ log(GNPPerCapitaPPP) + gini +  log(FirearmsPer100People2005), data = SuicideData)
@@ -13,6 +13,8 @@ m5b <- lm(log(Suicide) ~ HDI * gini +  log(FirearmsPer100People2005),
           data = subset(SuicideData, country != "South Africa"))
 m6 <- lm(log(Suicide) ~ GNPPerCapitaPPP * gini +  log(FirearmsPer100People2005), data = SuicideData)
 m7 <- lm(log(Suicide) ~ HDI, data = SuicideData)
+m8 <- lm(log(Suicide) ~ HDI * gini + Alcohol +  log(FirearmsPer100People2005), data = SuicideData)
+
 
 summary(m3)
 summary(m4)
@@ -20,6 +22,7 @@ summary(m4b)
 summary(m5) # best model with South Africa
 summary(m5b) # interaction effect disappears without South Africa
 summary(m7) # when inequality not in, there is a strong income effect the other way but beware, this is basically just the collinearity with inequality
+summary(m8)
 AIC(m3, m4, m5)
 
 

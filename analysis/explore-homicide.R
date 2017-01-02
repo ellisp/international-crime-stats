@@ -64,7 +64,7 @@ indicators2005 %>%
 
 #--------------modelling homicide---------------------
 HomicideData <- indicators2005 %>%
-  dplyr::select(Homicide2005, GNPPerCapitaPPP, gini, FirearmsPer100People2005, HDI, country)
+  dplyr::select(Homicide2005, GNPPerCapitaPPP, gini, FirearmsPer100People2005, HDI, country, Alcohol)
 HomicideData <- HomicideData[complete.cases(HomicideData), ]
 
 
@@ -72,11 +72,14 @@ hm1 <- lm(log(Homicide2005) ~ log(GNPPerCapitaPPP) + gini +  log(FirearmsPer100P
 hm2 <- lm(log(Homicide2005) ~ HDI + gini +  log(FirearmsPer100People2005), data = HomicideData)
 hm3 <- lm(log(Homicide2005) ~ HDI * gini +  log(FirearmsPer100People2005), data = HomicideData)
 hm4 <- lm(log(Homicide2005) ~ HDI * gini, data = HomicideData)
+hm5 <- lm(log(Homicide2005) ~ HDI * gini + Alcohol + log(FirearmsPer100People2005), data = HomicideData)
 summary(hm1)
 summary(hm2)
 summary(hm3)
 AIC(hm1, hm2, hm3)
 anova(hm2, hm3)
+
+summary(hm5)
 
 # diagnostics are fine:
 par(mfrow = c(2, 2))
