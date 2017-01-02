@@ -83,9 +83,12 @@ homicide <- homicide_orig %>%
 
 #---------------UNDP HDI-----------
 hdi2005 <- hdi %>%
-  filter(year %in% c(2000, 2010)) %>%
-  group_by(Alpha_2) %>%
-  summarise(HDI = mean(HDI, na.rm = TRUE)) # some don't have 2000 values
+  filter(year %in% c(2000, 2005, 2010)) %>%
+  group_by(Alpha_2) %>% 
+  summarise(HDI = ifelse(length(HDI[year == 2005] == 1),
+                         HDI[year == 2005],
+                         mean(HDI)))
+
 
 #--------------combine all together----------------
 indicators2005 <- who_ind %>%

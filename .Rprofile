@@ -10,6 +10,5 @@ library(tidyverse)
 library(purrr)
 library(openxlsx)
 
-ISO3166 <- read_csv("data/conc_iso3166.csv", na = "", col_types = "ccc") # na.strings important otherwise Namibia is an NA!
 
 
