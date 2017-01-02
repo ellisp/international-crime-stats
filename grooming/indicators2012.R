@@ -85,7 +85,8 @@ indicators2012 <- who_ind %>%
   left_join(gnp, by = c("Alpha_2" = "iso2c")) %>%
   left_join(sas_df2[ , c("Average total all civilian firearms", "Alpha_2")], by = "Alpha_2") %>%
   mutate(FirearmsPer100People2005 = `Average total all civilian firearms` / Pop2005 * 100) %>%
-  left_join(hdi2012, by = "Alpha_2") 
+  left_join(hdi2012, by = "Alpha_2")  %>%
+  mutate(rich = HDI > 0.87) 
 
 save(indicators2012, file = "data/indicators2012.rda")
 
