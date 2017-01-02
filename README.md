@@ -46,3 +46,18 @@ See also the project [issues](https://github.com/ellisp/international-crime-stat
 ### images
 The `./images/` folder holds images (typically analysis output) that is used in common across the project - for example analytical outputs.
 
+## Other dependencies
+
+There are a few slightly non-standard R dependencies.
+
+### Webshot and phantomjs
+
+
+```r
+library(webshot)
+webshot::install_phantomjs()
+```
+
+### Tabulizer
+
+See the small arms survey download script.

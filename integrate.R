@@ -4,6 +4,7 @@ library(caret)
 library(boot)
 library(viridis)
 library(DT)
+library(webshot)
 
 # suicide and homicide data
 source("grooming/download-small-arms-survey-2007.R") 
