@@ -1,8 +1,11 @@
+library(viridis)
+library(caret)
+
 load("data/indicators2005.rda")
 
 names(indicators2005)
 
-p2 <- ggplot(indicators2005, aes(x = FirearmsPer100People2005, y = Suicide, label = Alpha_3)) +
+p2 <- ggplot(indicators2005, aes(x = FirearmsPer100People2005, y = Suicide, label = country)) +
   geom_smooth(method = "lm") +
   geom_text_repel(colour = "white") +
   geom_point() +
@@ -33,6 +36,13 @@ ggplot(indicators2005, aes(x = GNPPerCapitaPPP, y = HDI, label = country)) +
   geom_point() +
   scale_x_log10()
 
+indicators2005 %>%
+  filter(!is.na(Suicide)) %>%
+  ggplot(aes(x = HDI, y = Suicide, label = country)) +
+  geom_smooth(method = "lm") +
+  geom_text_repel(colour = "white") +
+  geom_point() +
+  scale_y_log10()
 
 
 #--------pairs---------------
@@ -62,18 +72,4 @@ AIC(m1, m2)
 # diagnostics are fine:
 par(mfrow = c(2, 2))
 plot(m1)
-
-#---------------modelling suicide----------------
-m3 <- lm(log(Suicide) ~ log(GNPPerCapitaPPP) + gini +  log(FirearmsPer100People2005), data = indicators2005)
-m4 <- lm(log(Suicide) ~ HDI + gini +  log(FirearmsPer100People2005), data = indicators2005)
-m5 <- lm(log(Suicide) ~ HDI * gini +  log(FirearmsPer100People2005), data = indicators2005)
-
-summary(m3)
-summary(m4)
-summary(m5)
-AIC(m3, m4)
-
-#-------suicide, just rich countries-------------
-m4a <- lm(log(Suicide) ~ HDI + gini +  log(FirearmsPer100People2005), data = subset(indicators2005, rich))
-summary(m4a)
 

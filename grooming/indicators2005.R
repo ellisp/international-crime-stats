@@ -28,7 +28,7 @@ who_ind <- pop %>%
 
 #---------OECD data--------------
 suicide_ty <- suicide %>%
-  filter(year == targetyear & variable == "Crude") %>%
+  filter(year == targetyear & variable != "Crude") %>%
   select(-variable, -COU, -year)
 
 #-----------World Bank data-----------------
