@@ -1,6 +1,6 @@
 #---------------modelling suicide----------------
 SuicideData <- indicators2005 %>%
-  dplyr::select(Suicide, GNPPerCapitaPPP, gini, FirearmsPer100People2005, HDI, country, Alcohol)
+  dplyr::select(Suicide, FemaleSuicide, MaleSuicide, GNPPerCapitaPPP, gini, FirearmsPer100People2005, HDI, country, Alcohol)
 SuicideData <- SuicideData[complete.cases(SuicideData), ]
 
 m3 <- lm(log(Suicide) ~ log(GNPPerCapitaPPP) + gini +  log(FirearmsPer100People2005), data = SuicideData)
@@ -78,3 +78,9 @@ with(newdata, contour(x2, y, z, add = TRUE, labcex = 1, family = "xkcd",
                       levels = levs, labels = round(exp(levs)), col = "white"))
 title(main = "Higher inequality or higher development means lower suicide rates")
 with(indicators2005, text(GNPPerCapitaPPP, gini, round(Suicide), col = "orange", family = "xkcd"))
+
+
+#=========================sex disag=========================
+smm8 <- lm(log(MaleSuicide) ~ HDI * gini + Alcohol *  log(FirearmsPer100People2005), data = SuicideData)
+summary(smm8)
+

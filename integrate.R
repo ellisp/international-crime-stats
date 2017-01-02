@@ -19,4 +19,4 @@ source("grooming/indicators2005.R") # 2005 combined indicators, for purpose of t
 # Documentation of repository and datasets
 knit("README.Rmd", output = "README.md")
 render("doc/suicide.Rmd")
-
+render("doc/indicators2005.Rmd")

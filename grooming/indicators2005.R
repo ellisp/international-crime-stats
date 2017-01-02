@@ -79,7 +79,7 @@ homicide <- homicide_orig %>%
   mutate(yearout = abs(year - targetyear)) %>%
   group_by(iso2c) %>%
   summarise(homicideyear = year[yearout == min(yearout)][1],
-            Homicide2005 = value[year == homicideyear])
+            Homicide = value[year == homicideyear])
 
 #---------------UNDP HDI-----------
 hdi2005 <- hdi %>%
@@ -96,7 +96,9 @@ indicators2005 <- who_ind %>%
   left_join(sas_df2[ , c("Average total all civilian firearms", "Alpha_2")], by = "Alpha_2") %>%
   mutate(FirearmsPer100People2005 = `Average total all civilian firearms` / Pop2005 * 100) %>%
   left_join(hdi2005, by = "Alpha_2")  %>%
-  mutate(rich = HDI > 0.845) 
+  mutate(rich = HDI > 0.845) %>%
+  mutate(worldbankincomegroup = factor(worldbankincomegroup, levels =
+                                         c("Low-income", "Lower-middle-income", "Upper-middle-income", "High-income")))
 
 save(indicators2005, file = "data/indicators2005.rda")
 
