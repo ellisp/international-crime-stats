@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 The `suicide` dataset is sourced from the OECD, created in `/grooming/import-oecd-suicide.R` script.  It is downloaded with SDMX from the ["OECD Health Status" database]() with all variables unselected except "External causes of mortality", "Intentional self-harm".
 
-```{r results = 'asis'}
+```{r suich1, results = 'asis'}
 datatable(suicide)
 ```
 

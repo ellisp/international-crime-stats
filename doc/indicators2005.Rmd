@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 `indicators2005` is the main data frame for analysis of the impact of civilian small arms ownership on homicide and suicide.  Each indicator is as close to 2005 as possible.
 
-```{r results = 'asis'}
+```{r i2005ch1, results = 'asis'}
 dim(indicators2005)
 datatable(indicators2005)
 ```
@@ -39,14 +39,14 @@ The variables are
 - **rich** Logical value, `TRUE` if country is one of the top 25 by HDI.
 
 ### Data that comes from different years:
-```{r}
+```{r i2005ch2}
 table(indicators2005$giniyear)
 table(indicators2005$gnpyear)
 table(indicators2005$homicideyear)
 ```
 
 ### Basic descriptive graphic
-```{r fig.width = 12, fig.height = 12, warning = FALSE, message = FALSE}
+```{r i2005ch3, fig.width = 12, fig.height = 12, warning = FALSE, message = FALSE}
 indicators2005 %>%
   select(worldbankincomegroup, Suicide, gini, GNPPerCapitaPPP, Homicide, FirearmsPer100People2005, HDI) %>%
   ggpairs(mapping = ggplot2::aes(colour=worldbankincomegroup))
