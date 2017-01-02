@@ -3,6 +3,7 @@ library(rmarkdown)
 library(caret)
 library(boot)
 library(viridis)
+library(DT)
 
 # suicide and homicide data
 source("grooming/download-small-arms-survey-2007.R") 
@@ -16,5 +17,5 @@ source("grooming/indicators2005.R") # 2005 combined indicators, for purpose of t
 
 # Documentation of repository and datasets
 knit("README.Rmd", output = "README.md")
-
+knit("doc/suicide.Rmd", output = "doc/suicide.md")
 

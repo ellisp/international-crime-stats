@@ -1,0 +1,21 @@
+---
+title: "suicide"
+author: "Peter Ellis and Kay Fisher"
+date: "3 January 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## suicide
+
+The `suicide` dataset is sourced from the OECD, created in `/grooming/import-oecd-suicide.R` script.  It is downloaded with SDMX
+
+```{r results = 'asis'}
+datatable(suicide)
+```
+
+
+
