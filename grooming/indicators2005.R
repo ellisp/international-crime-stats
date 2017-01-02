@@ -76,7 +76,7 @@ homicide <- homicide_orig %>%
 hdi2005 <- hdi %>%
   filter(year %in% c(2000, 2010)) %>%
   group_by(Alpha_2) %>%
-  summarise(HDI = mean(HDI))
+  summarise(HDI = mean(HDI, na.rm = TRUE)) # some don't have 2000 values
 
 #--------------combine all together----------------
 indicators2005 <- who_ind %>%
@@ -87,7 +87,7 @@ indicators2005 <- who_ind %>%
   left_join(sas_df2[ , c("Average total all civilian firearms", "Alpha_2")], by = "Alpha_2") %>%
   mutate(FirearmsPer100People2005 = `Average total all civilian firearms` / Pop2005 * 100) %>%
   left_join(hdi2005, by = "Alpha_2")  %>%
-  mutate(rich = HDI > 0.87) 
+  mutate(rich = HDI > 0.845) 
 
 save(indicators2005, file = "data/indicators2005.rda")
 

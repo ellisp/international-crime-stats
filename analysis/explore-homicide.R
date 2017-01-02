@@ -14,7 +14,7 @@ p2 +  scale_x_log10(breaks = c(1, 10, 100)) +
   scale_y_log10()
 
 
-p3 <- ggplot(indicators2005, aes(x = FirearmsPer100People2005, y = Homicide, label = Alpha_3)) +
+p3 <- ggplot(indicators2005, aes(x = FirearmsPer100People2005, y = Homicide2005, label = Alpha_3)) +
   geom_smooth(method = "lm") +
   geom_text_repel(colour = "white") +
   geom_point() +
@@ -37,13 +37,13 @@ ggplot(indicators2005, aes(x = GNPPerCapitaPPP, y = HDI, label = country)) +
 
 #--------pairs---------------
 indicators2005 %>%
-  dplyr::select(GNPPerCapitaPPP, gini, HDI, FirearmsPer100People2005, Homicide, Suicide) %>%
+  dplyr::select(GNPPerCapitaPPP, gini, HDI, FirearmsPer100People2005, Homicide2005, Suicide) %>%
   ggpairs() 
 
 indicators2005 %>%
   mutate(LogGNI = log(GNPPerCapitaPPP),
          LogFirearms = log(FirearmsPer100People2005),
-         LogHomicide = log(Homicide),
+         LogHomicide = log(Homicide2005),
          LogSuicide = log(Suicide)) %>%
   select(LogGNI, HDI, gini, LogFirearms, LogHomicide, LogSuicide, rich) %>%
   mutate(rich = as.factor(rich)) %>%
@@ -53,8 +53,8 @@ indicators2005 %>%
 
 #--------------modelling homicide---------------------
 
-m1 <- lm(log(Homicide) ~ log(GNPPerCapitaPPP) + gini +  log(FirearmsPer100People2005), data = indicators2005)
-m2 <- lm(log(Homicide) ~ HDI + gini +  log(FirearmsPer100People2005), data = indicators2005)
+m1 <- lm(log(Homicide2005) ~ log(GNPPerCapitaPPP) + gini +  log(FirearmsPer100People2005), data = indicators2005)
+m2 <- lm(log(Homicide2005) ~ HDI + gini +  log(FirearmsPer100People2005), data = indicators2005)
 summary(m1)
 summary(m2)
 AIC(m1, m2)
