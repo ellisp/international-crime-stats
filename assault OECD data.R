@@ -1,13 +1,8 @@
 # see http://ellisp.github.io/blog/2015/11/26/violent-deaths
 
-library(ggplot2)
-library(scales)
 library(grid)
 library(gridExtra) # added 27/11/2015, for grid.arrange() to work!
-library(dplyr)
-library(tidyr)
 library(rsdmx)    # for importing OECD data
-library(ISOcodes) # for merging country codes with names
 library(rvest)    # for screen scraping data about Catholicism
 library(extrafont)
 library(stringr)

@@ -10,7 +10,7 @@ if(!exists("suic_sdmx")){
 suicide <- suic_sdmx %>%
   mutate(variable = ifelse(UNIT == "TXCRUDTX", "Crude", "Standardised")) %>%
   rename(year = obsTime, Suicide = obsValue) %>%
-  select(year, COU, Suicide) %>%
+  select(year, COU, Suicide, variable) %>%
   left_join(ISO3166, by = c("COU" = "Alpha_3"))
 
 save(suicide, file = "data/suicide.rda")

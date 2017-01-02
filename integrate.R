@@ -2,7 +2,7 @@
 # suicide and homicide data
 source("grooming/download-small-arms-survey-2007.R") 
 source("grooming/import-hdi.R")
-source("grooming/indicators2012.R") # 2012 combined indicators
+source("grooming/indicators2005.R") # 2005 combined indicators, for purpose of testing the small arms data
 
 
 # OECD assault data
