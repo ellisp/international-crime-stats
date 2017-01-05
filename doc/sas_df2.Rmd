@@ -48,7 +48,7 @@ The columns are:
 
 This data frame is an intermeidate step to creating `indicators2005`
 
-```{r hdi2, fig.width = 10, fig.height = 10}
+```{r sas2, fig.width = 10, fig.height = 10}
 dim(sas_df2)
 datatable(sas_df2)
 ```
