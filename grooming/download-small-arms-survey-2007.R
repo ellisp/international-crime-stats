@@ -41,19 +41,7 @@ sas_df2 <- sas_orig  %>%
             `Average total all civilian firearms` = sum(`Average total all civilian firearms`)) %>%
   left_join(sas_orig[ , c("Country", "Average firearms per 100 people")], by = "Country") %>%
   rename(OriginalAverageFirearms = `Average firearms per 100 people`) %>%
-  mutate(BestGuessFirearmsRate = ifelse(Country == "United Kingdom", DerivedAverageFirearms, OriginalAverageFirearms)) %>%
   left_join(ISO3166, by = c("Country" = "Name"))
 
-
-# create a CSV for inspecting by hand to see which ones probably wrong
-# sas_orig %>%
-#   mutate(DerivedAverage = round(`Average total all civilian firearms` / `Population, 2005` * 100, 1),
-#          out = DerivedAverage - `Average firearms per 100 people`,
-#          out_abs = abs(out),
-#          out_ratio = out_abs / DerivedAverage) %>%
-#   arrange(desc(out_ratio)) %>%
-#   select(Country, `Average firearms per 100 people`, DerivedAverage, `Average total all civilian firearms`, 
-#          `Population, 2005`) %>%
-#   write.csv("data/population-checks.csv", row.names = FALSE)
 
 

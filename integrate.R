@@ -4,7 +4,7 @@ library(caret)
 library(boot)
 library(viridis)
 library(DT)
-library(webshot)
+library(webshot) # used for making png versions of DT::datatable, for use in markdown
 
 #================Data imports====================
 # Country code concordance
@@ -30,11 +30,15 @@ knit("README.Rmd", output = "README.md")
 render("doc/suicide.Rmd")
 render("doc/indicators2005.Rmd")
 render("doc/hdi.Rmd")
+render("doc/sas_df2.Rmd")
 
 
 # Make Markdown versions for use in the Wiki.  Note the Wiki needs to be independently cloned.
 knit("doc/indicators2005.Rmd", output = "../international-crime-stats.wiki/indicators2005.md")
 knit("doc/suicide.Rmd", output = "../international-crime-stats.wiki/suicide.md")
 knit("doc/hdi.Rmd", output = "../international-crime-stats.wiki/HDI.md")
+knit("doc/sas_df2.Rmd", output = "../international-crime-stats.wiki/sas_df2.md")
+
+
 # copy images needed by the markdown versions over to the Wiki repository:
 system("cp figure/*.* ../international-crime-stats.wiki/figure")
