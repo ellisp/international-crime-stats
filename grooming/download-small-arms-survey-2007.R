@@ -1,8 +1,3 @@
-library(tabulizer)
-
-# Installing tabulizer is non-trivial, adapt the following depending on where the JDK is:
-# Sys.setenv(JAVA_HOME = "C:/Program Files/Java/jdk1.7.0_79")
-# ghit::install_github(c("ropensci/tabulizerjars", "ropensci/tabulizer"), INSTALL_opts = "--no-multiarch")
 
 if(!"Small-Arms-Survey-2007-Ch2.pdf" %in% list.files(path = "raw_data")){
 download.file("http://www.smallarmssurvey.org/fileadmin/docs/A-Yearbook/2007/en/Small-Arms-Survey-2007-Chapter-02-annexe-4-EN.pdf",

@@ -1,5 +1,3 @@
-library(WHO)
-
 cd <- get_codes()
 head(cd)
 cd[grep("[Aa]lcohol", cd$display), ][1,]

@@ -11,6 +11,14 @@ library(magrittr) # for %$%
 library(grid)
 library(gridExtra)
 library(Cairo)
+library(WHO)
+library(WDI)
+library(tabulizer)
+# tabulizer is non-trivial to install.  Requires the Java Development Kit.
+# see https://github.com/ropensci/tabulizer 
+# Depending on your JDK install, you may need to adapt the following depending on where the JDK is:
+# Sys.setenv(JAVA_HOME = "C:/Program Files/Java/jdk1.7.0_79")
+# ghit::install_github(c("ropensci/tabulizerjars", "ropensci/tabulizer"), INSTALL_opts = "--no-multiarch")
 
 #================Data imports====================
 # Country code concordance.  Note that this is one to many for name to Alpha_x.
@@ -31,6 +39,8 @@ source("grooming/import-oecd-assault-deaths.R")
 source("analysis/explore-oecd-assaults-data.R")
 
 #==============Documentation of repository and datasets===========
+# this should maybe be automated so all .Rmd files and so on are done, rather than listing them individually
+
 knit("README.Rmd", output = "README.md")
 
 # Make HTML versions for local use:

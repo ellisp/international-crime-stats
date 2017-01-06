@@ -6,9 +6,6 @@
 # * sas_df2, created in grooming/download-small-arms-survey-2007.R
 # * hdi, created in grooming/import-hdi.R
 
-library(WHO)
-library(WDI)
-
 # 2012 is chosen because target variable is suicide or homicide and that's the year
 # data are available from the WHO
 targetyear <- 2005
