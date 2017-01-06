@@ -7,6 +7,10 @@ library(DT)
 library(webshot) # used for making png versions of DT::datatable, for use in markdown
 library(ISOcodes)
 library(rsdmx)    # for importing OECD data
+library(magrittr) # for %$%
+library(grid)
+library(gridExtra)
+library(Cairo)
 
 #================Data imports====================
 # Country code concordance.  Note that this is one to many for name to Alpha_x.
@@ -24,6 +28,7 @@ source("grooming/indicators2005.R") # 2005 combined indicators, for purpose of t
 source("grooming/import-oecd-assault-deaths.R")
 #============Analysis==================
 
+source("analysis/explore-oecd-assaults-data.R")
 
 #==============Documentation of repository and datasets===========
 knit("README.Rmd", output = "README.md")
