@@ -6,13 +6,14 @@ maxyear <- max(oecd_assaults$Year)
 
 
 #======================"bar" charts showing average rates since 1990=================
-png("images/oecd_assaults_bypop.png", 1000, 800, res = 100)
+png("output/oecd_assaults_bypop.png", 1000, 800, res = 100)
 # make a temporary version of the data that is longer, with a Sex variable
 # rather than a column for the values of each sex
 tmp <- oecd_assaults_sum %>%
   select(Country, Male, Female) %>%
   gather(Sex, Value, -Country)
 
+print(
 oecd_assaults_sum %>%
   # which order to present in? Can be Population, Male or Female
   arrange(Population) %>%
@@ -30,16 +31,18 @@ oecd_assaults_sum %>%
   scale_colour_manual("", values = c(Female = "red", Male = "blue")) +
   labs(colour = "") +
   ggtitle(paste("Mean annual deaths from assault 1990 to", maxyear)) 
+)
 dev.off()
 
 knockouts <- c("Colombia", "Brazil", "Russian Federation", "Mexico")
 
-png("images/oecd_assaults_nonlog.png", 1000, 800)
+png("output/oecd_assaults_nonlog.png", 1000, 800)
 tmp <- oecd_assaults_sum %>%
   filter(!Country %in% knockouts) %>%
   select(Country, Male, Female) %>%
   gather(Sex, Value, -Country)
 
+print(
 oecd_assaults_sum %>%
   # which order to present in? Can be Population, Male or Female
   filter(!Country %in% knockouts) %>%
@@ -58,10 +61,11 @@ oecd_assaults_sum %>%
   scale_colour_manual("", values = c(Female = "red", Male = "blue")) +
   labs(colour = "") +
   ggtitle(paste("Mean annual deaths from assault 1990 to", maxyear)) 
+)
 dev.off()
 
 #-----------order by female-------------
-png("images/oecd_assaults_nonlog_female_ordered.png", 1000, 800)
+png("output/oecd_assaults_nonlog_female_ordered.png", 1000, 800)
 # make a temporary version of the data that is longer, with a Sex variable
 # rather than a column for the values of each sex
 tmp <- oecd_assaults_sum %>%
@@ -69,6 +73,7 @@ tmp <- oecd_assaults_sum %>%
   select(Country, Male, Female) %>%
   gather(Sex, Value, -Country)
 
+print(
 oecd_assaults_sum %>%
   # which order to present in? Can be Population, Male or Female
   filter(!Country %in% knockouts) %>%
@@ -87,6 +92,7 @@ oecd_assaults_sum %>%
   scale_colour_manual("", values = c(Female = "red", Male = "blue")) +
   labs(colour = "") +
   ggtitle(paste("Mean annual deaths from assault 1990 to", maxyear)) 
+)
 dev.off()
 
 
@@ -94,7 +100,7 @@ dev.off()
 rectcol <- "darkgreen"
 
 # 25 best countries
-CairoPDF("images/oecd_assaults_25countries_overtime.pdf", 16, 11)
+CairoPDF("output/oecd_assaults_25countries_overtime.pdf", 16, 11)
 
 numberin <- 25
 countriesin <- oecd_assaults_sum %>%
@@ -102,6 +108,7 @@ countriesin <- oecd_assaults_sum %>%
   slice(1:25) %$%
   Country
 
+print(
 oecd_assaults %>%
   mutate(Unit = str_to_title(gsub("Deaths per 100 000 ", "", Unit)),
          Unit = factor(Unit, levels = c("Females", "Population", "Males"))) %>%
@@ -119,7 +126,9 @@ oecd_assaults %>%
                       ", in order of average rate since 2008")) +
   scale_x_continuous("", breaks = seq(1960, 2010, by = 10)) +
   coord_cartesian(ylim = c(0, 4))
+)
 
+# draw rectangle highlighting New Zealand
 grid.rect(0.521, 0.175, 0.192, 0.203, 
           gp = gpar(fill = NA, col = rectcol, lwd = 4))
 
@@ -185,8 +194,10 @@ p3 <- oecd_assaults %>%
   labs(x = "\nNew Zealand's slower improvement in female deaths from assault means it now has the highest rate of the comparison countries in this chart.\n") +
   coord_cartesian(xlim = c(earlier, 2015))
 
-CairoPDF("images/oecd_assaults_6countries_overtime.pdf", 16, 11)
+CairoPDF("output/oecd_assaults_6countries_overtime.pdf", 16, 11)
   grid.arrange(p2, p3, ncol = 1)
+  
+  # draw rectangles highlighting New Zealand
   
   # bottom
   grid.rect(0.838, 0.171, 0.315, 0.218, 
