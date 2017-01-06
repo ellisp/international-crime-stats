@@ -5,11 +5,13 @@ library(boot)
 library(viridis)
 library(DT)
 library(webshot) # used for making png versions of DT::datatable, for use in markdown
+library(ISOcodes)
+library(rsdmx)    # for importing OECD data
 
 #================Data imports====================
-# Country code concordance
+# Country code concordance.  Note that this is one to many for name to Alpha_x.
 ISO3166 <- read_csv("data/conc_iso3166.csv", na = "", col_types = "ccc") # na.strings important otherwise Namibia is an NA!
-
+data("ISO_3166_1") # for one to one version when Alpha_x to name needed one to one
 
 # suicide and homicide data
 source("grooming/download-small-arms-survey-2007.R") 
@@ -19,7 +21,7 @@ source("grooming/indicators2005.R") # 2005 combined indicators, for purpose of t
 
 
 # OECD assault data
-
+source("grooming/import-oecd-assault-deaths.R")
 #============Analysis==================
 
 
