@@ -1,0 +1,63 @@
+---
+title: "sas_df2"
+author: "Peter Ellis"
+date: "6 January 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Small Arms Survey 2007
+
+These data are originally downloaded from  http://www.smallarmssurvey.org/fileadmin/docs/A-Yearbook/2007/en/Small-Arms-Survey-2007-Chapter-02-annexe-4-EN.pdf and are transformed in the scripts: 
+
+- [`./grooming/download-small-arms-survey-2007.R`](https://github.com/ellisp/international-crime-stats/blob/master/grooming/download-small-arms-survey-2007.R)
+- `./grooming/create-comparison-dataset-sas.R` (needs to be run later in the project because it uses population figures that were downloaded from WHO in `./grooming/indicators2005.R`)
+
+There are some discrepancies in the original data:
+
+- Some of the 2005 population figures are wrong; either obviously typos (Egypt is 1/100th its correct value) or less obviously (Cyprus SAS population of 760,000 compared to 1,032,000 actual; Mongolia 600,000 versus [2.5 million](https://www.google.co.nz/search?q=population+of+mongolia+in+2005&rls=com.microsoft:en-US:%7Breferrer:source?%7D&ie=UTF-8&oe=UTF-8&sourceid=ie7&rlz=1I7MXGB_enNZ512&gfe_rd=cr&ei=C6puWLjrIMLr8AfMgJioAg&gws_rd=ssl); Burundi 17 million versus [8 million](https://www.google.co.nz/search?q=population+of+mongolia+in+2005&rls=com.microsoft:en-US:%7Breferrer:source?%7D&ie=UTF-8&oe=UTF-8&sourceid=ie7&rlz=1I7MXGB_enNZ512&gfe_rd=cr&ei=C6puWLjrIMLr8AfMgJioAg&gws_rd=ssl#q=population+of+burundi+in+2005))
+- Some of the original average number of firearms per 100 population in the original data do not equal the original total firearms divided by the original population (for example, Uzbekistan)
+- Some of the original average number of firearms per 100 population do not match the original total firearms actual population divided by the actual corrected population (for example, Ecuador).
+
+In this project, two temporary (non-persistent) data frames of this data are created, as intermediate steps to the creation of [`indicators2005`](https://github.com/ellisp/international-crime-stats/wiki/indicators2005).  Only `indicators2005` is saved in the `./data/` folder.
+
+## sas_df3
+
+`sas_df3` combines the original data from the Small Arms Survey 2007 report with 2005 population data sourced from the WHO.  The purpose of `sas_df3` is to facilitate comparisons of data discrepancies.  `sas_df3` is the basis of the file `./output/comparisons-discrepencies-sas2007.csv`
+
+```{r sas1}
+dim(sas_df3)
+datatable(sas_df3)
+```
+
+The columns are:
+
+- **Alpha_2** ISO3166 two character country code
+- **Country** Country name.  Note that `England & Wales`, `Scotland` and `Northern Ireland` from the original data have been combined into `United Kingdom`.
+- **Average total all civilian firearms**.  Total figure, from the original report, unedited except for aggregating the United Kindom value.
+- **SASPopulation** The 2005 population values in the original Small Arms Survey 2007 report.  Some of these are incorrect.
+- **ActualPopulation** 2005 population values from the WHO.
+- **SASORiginalAverageFirearms**.  The firearms per 100 people figures from the original report.  Some of these are inconsistent with the population and total firearms figures.
+- **SASDerivedAverageFirearms**.  The firearms per 100 people figures derived from the original total firearms and total population of the original report.
+- **ActualFirearmsDividedByActual100Population**.  The total firearms from the original report, divided by the WHO population figures for 2005, multiplied by 100.  At the time of writing, this is our best estimate of the actual firearms per 100 people figure.
+
+## sas_df2
+
+This data frame is an intermeidate step to creating `indicators2005`
+
+```{r sas2, fig.width = 10, fig.height = 10}
+dim(sas_df2)
+datatable(sas_df2)
+```
+
+- **Country** Country name
+- **DerivedAverageFirearms** same as SASDerivedAverageFirearms in `sas_df3`
+- **GNI (2005$) per capita** from the Small Arms Survey.  Not used elsewhere in the project, or checked.
+- **OriginalPopulation2005** Same as SASPopulation in `sas_df3`
+- **Average total all civilian firearms** Total figure, from the original report, unedited except for aggregating the United Kindom value.
+- ** OriginalAverageFirearms** same as SASORiginalAverageFirearms in `sas_df3`
+- **Alpha_2**, **Alpha_3** ISO3166 country codes
+

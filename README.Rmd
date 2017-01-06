@@ -5,7 +5,9 @@ date: "3 January 2017"
 output: html_document
 ---
 
-
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
 ## International Crime Statistics
 
@@ -59,8 +61,7 @@ There are a few slightly non-standard R dependencies.
 
 ### Webshot and phantomjs
 
-
-```r
+```{r eval = FALSE}
 library(webshot)
 webshot::install_phantomjs()
 ```
