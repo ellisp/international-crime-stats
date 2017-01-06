@@ -1,3 +1,5 @@
+# this should be re-done as a .Rmd file and exported to the Wiki
+
 
 load("data/indicators2005.rda")
 
@@ -8,10 +10,8 @@ p2 <- ggplot(indicators2005, aes(x = FirearmsPer100People2005, y = Suicide, labe
   labs(x = "Civilian firearms per 100 people", 
        y = "Suicide per 100,000")
 
-svg("images/suicide-firearms.svg", 7, 5)
 print(p2 +  scale_x_log10(breaks = c(1, 10, 100)) +
   scale_y_log10())
-dev.off()
 
 
 p3 <- ggplot(indicators2005, aes(x = FirearmsPer100People2005, y = Homicide, label = Alpha_3)) +
@@ -21,18 +21,13 @@ p3 <- ggplot(indicators2005, aes(x = FirearmsPer100People2005, y = Homicide, lab
   labs(x = "Civilian firearms per 100 people", 
        y = "Homicide per 100,000")
 
-svg("images/homicide-firearms-nolog.svg", 7, 5)
 print(p3)
-dev.off()
 
-svg("images/homicide-firearms-log.svg", 7, 5)
 p3 +  scale_x_log10(breaks = c(1, 10, 100)) +
   scale_y_log10()
-dev.off()
 
 
 #----other---------
-svg("images/gni-hdi-2005.svg", 7, 5)
 print(
 ggplot(indicators2005, aes(x = GNPPerCapitaPPP, y = HDI, label = country)) +
   geom_smooth(method = "lm") +
@@ -42,10 +37,8 @@ ggplot(indicators2005, aes(x = GNPPerCapitaPPP, y = HDI, label = country)) +
   ggtitle("Gross National Income compared to Human Development Index, 2005",
          "(or closest year available for some countries missing GNI)")
 )
-dev.off()
 
 
-svg("images/suicide-hdi-2005.svg", 7, 5)
 print(
 indicators2005 %>%
   filter(!is.na(Suicide)) %>%
@@ -55,7 +48,6 @@ indicators2005 %>%
   geom_point() +
   scale_y_log10()
 )
-dev.off()
 
 #--------pairs---------------
 
