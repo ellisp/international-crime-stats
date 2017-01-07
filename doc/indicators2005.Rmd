@@ -32,7 +32,7 @@ The variables are
 - **gnpyear** year for GNP data.  Chosen to be as close to 2005 as possible.
 - **GNPPerCapitaPPP** Gross National Income per capita, purchasing power parity measure. `NY.GNP.PCAP.PP.CD` measure in World Development Indicators.
 - **homicideyear** year for homicide data.  Chosen to be as close to 2005 as possible.  Varies from 2004 to 2014 but mostly is 2005.
-- **Homicide** homicides per 100,000 population 
+- **Homicide** homicides per 100,000 population.  Series `VC.IHR.PSRC.P5` from the World Bank World Development Indicators. 
 - **Average total all civilian firearms** Taken directly from the Small Arms Survey 2007, not edited.
 - **FirearmsPer100People2005"** Calculated from total firearms divided by population, time 100.  Not taken directly from the Small Arms Survey, which has a column for firearms per 100 people but which involves errors and inconsistencies.
 - **HDI** Human Development Index for 2005.  Calculated as average of HDI in 2000 and 2010 for most countries.  Some countries (when only one value available) is HDI for 2010.  Source is the UNDP Human Development Index 2015 report Excel tables, which has incomplete historical data.

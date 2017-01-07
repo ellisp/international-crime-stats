@@ -1,0 +1,197 @@
+---
+title: "firearms-homicide"
+author: "Peter Ellis"
+date: "7 January 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, dev = 'svg', message = FALSE)
+library(stargazer)
+```
+
+## Motivation
+
+We wanted to explore for possible links between civilian ownership of firearms and total homicides - not just firearm-related homicides.
+
+This has been looked at before, but surprisingly most analysis does not control for income, which is a major confounding factor at the country level.
+
+TODO review of blogs and literature that have looked at the same data. 
+
+## Data
+
+The `indicators2005` data was developed for this purpose.  Here's the first five rows of that dataset:
+
+```{r echo = FALSE}
+kable(indicators2005[1: 5, ])
+```
+
+We're interested in the `Homicide` column, which was sourced from the World Development Indicators.  This variable has a skewed distribution:
+
+```{r analysis-mh-1}
+ggplot(indicators2005, aes(x = Homicide, fill = region, colour = region)) + 
+  geom_density(alpha = 0.5) + 
+  geom_rug() +
+  ggtitle("Homicides per 100,000 population") +
+  labs(caption = "Source: WDI")
+```
+
+Explain the firearms data.
+
+Explain the HDI.
+
+## Pairwise relationships
+
+There's a very faint negative relationship between our main explanatory variable of interest, `FirearmsPer100People2005`, and homicide rates.  This is clearer on the logarithmic scale. The USA is such an outlier for firearms ownership on the raw scale.  The (TODO: which right wing outfit?) used this to claim that gun ownership makes a country safer.
+
+```{r analysis-mh-2}
+p1 <- ggplot(indicators2005, aes(x = FirearmsPer100People2005, y = Homicide, label = Alpha_3)) +
+  geom_smooth(method = "lm") +
+  geom_text_repel(colour = "white") +
+  geom_point() +
+  labs(x = "Civilian firearms per 100 people", 
+       y = "Homicide per 100,000")
+p1
+p1 + scale_x_log10() + scale_y_log10()
+```
+
+
+There's a much stronger negative relationship between national average income and homicides.  Richer countries have lower homicide rates:
+
+```{r analysis-mh-3}
+ggplot(indicators2005, aes(x = GNPPerCapitaPPP, y = Homicide, label = Alpha_3)) +
+  geom_smooth(method = "lm") +
+  geom_text_repel(colour = "white") +
+  geom_point() +
+  labs(x = "Gross National Income per person, purchasing power parity measure", 
+       y = "Homicide per 100,000") +
+  scale_x_log10() +
+  scale_y_log10()
+```
+
+And there's a strongly positive relationship between inequality and homicide rates:
+```{r analysis-mh-4}
+ggplot(indicators2005, aes(x = gini, y = Homicide, label = Alpha_3)) +
+  geom_smooth(method = "lm") +
+  geom_text_repel(colour = "white") +
+  geom_point() +
+  labs(x = "Economic inequality, Gini coefficient (higher number is more unequal)", 
+       y = "Homicide per 100,000") +
+  scale_y_log10()
+```
+
+
+Here's a summary of the overall pair-wise relationships
+```{r analysis-mh-5, fig.width = 10, fig.height = 8}
+indicators2005 %>%
+  mutate(LogGNI = log(GNPPerCapitaPPP),
+         LogFirearms = log(FirearmsPer100People2005),
+         LogHomicide = log(Homicide)) %>%
+  select(LogGNI, HDI, gini, LogFirearms, LogHomicide, Alcohol, rich) %>%
+  mutate(rich = ifelse(rich, "Most developed", "Less developed")) %>%
+  filter(!is.na(rich)) %>%
+  ggpairs(mapping = ggplot2::aes(color = rich))
+
+```
+
+## Modelling
+
+I'm first going to fit a model with ordinary least squares because it has a high degree of familiarity and may give people confidence in what is to come.  Then I'm going to use elastic net regularisation.
+
+First I'm going to restrict mysefl to complete cases.  
+
+*TODO - instead of doing this, do imputation, and integrate the imputation into the validation and confidence interval bootstraps*.
+```{r analysis-mh-6}
+HomicideData <- indicators2005 %>%
+  dplyr::select(Homicide, gini, FirearmsPer100People2005, HDI, country, Alcohol)
+HomicideData <- HomicideData[complete.cases(HomicideData), ]
+
+```
+
+
+### Ordinary least squares
+First the full model fit with OLS.  I try two versions - one with an interaction between inequality and the HDI, and one without, and start with a global test.  There's evidence of an interaction:
+
+```{r analysis-mh-7}
+model_full <- lm(log(Homicide) ~ gini * HDI + log(FirearmsPer100People2005) +  Alcohol, data = HomicideData)
+
+model_no_interactions <- lm(log(Homicide) ~ gini + HDI + log(FirearmsPer100People2005) +  Alcohol, data = HomicideData)
+anova(model_no_interactions, model_full)
+```
+
+#### Inference
+Here's the estimates of the various coefficients and their standard errors:
+
+```{r analysis-mh-8, results = 'asis', echo = FALSE}
+stargazer(model_full, type = "html")
+```
+
+The p-value for the positive firearms effect on homicides is 0.02 or 0.03 whether the interaction between inequality and income is in or out.  
+
+Best way to get a confidence interval for the size of the firearms effect is with a bootstrap.
+```{r analysis-mh-9}
+myfunction <- function(x, i){
+  the_data <- x[i, ]
+  bm <- lm(log(Homicide) ~ gini * HDI + log(FirearmsPer100People2005) +  Alcohol, data = the_data)
+  return(coef(bm)["log(FirearmsPer100People2005)"])
+}
+
+full_model_boot <- boot(HomicideData, myfunction, R = 5000)
+bc <- boot.ci(full_model_boot, type = "bca")
+bc
+
+```
+
+With log transformation of both the response and explanatory variables, the coefficients are the % change in y for a 1% change in x.  So we interpret this confidence interval a 1% increase in firearms held leads to between a 0.03% and 0.27% increase in homicides.
+
+#### Diagnostics
+
+All ok: 
+```{r  analysis-mh-10}
+par(mfrow = c(2, 2))
+plot(model_full)
+```
+
+
+### Elastic net regularization
+
+First we need to decide between the lasso (alpha = 1), ridge regression (alpha = 0), or between
+
+```{r analysis-mh-11}
+library(glmnet)
+X <- model.matrix(log(Homicide) ~ gini * HDI + log(FirearmsPer100People2005) +  Alcohol - 1, data = HomicideData)
+Y <- log(HomicideData$Homicide)
+
+alphas <- 0:50 / 50
+res <- rep(0, length(alphas)) 
+
+for(i in 1:length(alphas)){
+    cvmod <- cv.glmnet(x = X, y = Y, alpha = alphas[i])  
+    res[i] <- sqrt(min(cvmod$cvm))
+}
+
+plot(alphas, res) # so it doesn't matter much, but perhaps better towards 1 than zero?
+```
+
+
+Now we need a value for lambda which controls how much shrinkage done of the coefficients.  Cross-validation still the best way to do this.  We can get the best value for prediction, or the most aggressively shrinking value that gets prediction error within one standard error of the best.
+
+```{r analysis-mh-12}
+cvmod <- cv.glmnet(x = X, y = Y, alpha = 0.9)
+model_enr <- glmnet(x = X, y = Y, alpha = 0.9)
+
+coefs <- round(cbind(
+  original = coef(model_full),
+  shrunk = coef(model_enr, s = cvmod$lambda.min),
+  veryshrunk = coef(model_enr, s = cvmod$lambda.1se)
+), 3)
+
+colnames(coefs) <- c("original", "shrunk", "veryshrunk")
+coefs
+```
+
+So, the best performing model has Firearms as an explanatory variable, and is basically untouched by the elastic net regularization.  But a more ruthless model, happy to trade off a bit of predictive power for simplicity, would  only include inequality and level of development in predicting homicide levels.
+
+## Conclusion
+
+There is evidence that higher civilian ownership of firearms in 2007 is related to higher overall homicide rates.  However, the effect is not very large (about 0.16% increase in homicide for 1% increase in firearms owned), and is less important than either income/development (higher level of development leads to less homicides) or inequality (higher inequality leads to more homicides)

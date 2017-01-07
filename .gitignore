@@ -6,4 +6,5 @@
 
 *.pdf
 *.png
+*.svg
 !/images/*

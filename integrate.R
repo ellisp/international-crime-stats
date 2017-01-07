@@ -49,9 +49,11 @@ analysis <- list.files("analysis", "Rmd$", full.name = TRUE)
 lapply(docs, render)
 lapply(analysis, render)
 
+
 # Make Markdown versions for use in the Wiki.  Note the Wiki needs to be independently cloned.
-for(x in docs){
+for(x in c(docs, analysis)){
   outfile <- gsub("^doc/", "../international-crime-stats.wiki/", x)
+  outfile <- gsub("^analysis/", "../international-crime-stats.wiki/", x)
   outfile <- gsub(".Rmd$", ".md", outfile)
   knit(x, output = outfile)
 }
