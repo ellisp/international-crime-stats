@@ -2,19 +2,19 @@
 
 #--------------modelling homicide---------------------
 HomicideData <- indicators2005 %>%
-  dplyr::select(Homicide2005, GNPPerCapitaPPP, gini, FirearmsPer100People2005, HDI, country, Alcohol)
+  dplyr::select(Homicide, GNPPerCapitaPPP, gini, FirearmsPer100People2005, HDI, country, Alcohol)
 HomicideData <- HomicideData[complete.cases(HomicideData), ]
 
 
-hm1 <- lm(log(Homicide2005) ~ log(GNPPerCapitaPPP) + gini +  log(FirearmsPer100People2005), data = HomicideData)
-hm2 <- lm(log(Homicide2005) ~ HDI + gini +  log(FirearmsPer100People2005), data = HomicideData)
-hm3 <- lm(log(Homicide2005) ~ HDI * gini +  log(FirearmsPer100People2005), data = HomicideData)
-hm4 <- lm(log(Homicide2005) ~ HDI * gini, data = HomicideData)
-hm5 <- lm(log(Homicide2005) ~ HDI * gini + Alcohol + log(FirearmsPer100People2005), data = HomicideData)
+hm1 <- lm(log(Homicide) ~ log(GNPPerCapitaPPP) + gini +  log(FirearmsPer100People2005), data = HomicideData)
+hm2 <- lm(log(Homicide) ~ HDI + gini +  log(FirearmsPer100People2005), data = HomicideData)
+hm3 <- lm(log(Homicide) ~ HDI * gini +  log(FirearmsPer100People2005), data = HomicideData)
+hm4 <- lm(log(Homicide) ~ HDI * gini, data = HomicideData)
+hm5 <- lm(log(Homicide) ~ HDI * gini + Alcohol + log(FirearmsPer100People2005), data = HomicideData)
 summary(hm1)
 summary(hm2)
 summary(hm3)
-AIC(hm1, hm2, hm3)
+AIC(hm1, hm2, hm3, hm5)
 anova(hm2, hm3)
 
 summary(hm5)
@@ -23,11 +23,11 @@ summary(hm5)
 par(mfrow = c(2, 2))
 plot(hm3)
 
-train(log(Homicide2005) ~ HDI * gini +  log(FirearmsPer100People2005), method = "lm",
+train(log(Homicide) ~ HDI * gini +  log(FirearmsPer100People2005), method = "lm",
       data = HomicideData,
       trControl = trainControl(method = "boot632", number = 500))
 
-train(log(Homicide2005) ~ HDI * gini, method = "lm",
+train(log(Homicide) ~ HDI * gini, method = "lm",
       data = HomicideData,
       trControl = trainControl(method = "boot632", number = 500))
 
@@ -51,7 +51,7 @@ levs <- seq(from = 0, to = 9, length.out = 20)
 with(newdata, contour(x, y, z, add = TRUE, labcex = 1, family = "xkcd",
                       levels = levs, labels = round(exp(levs)), col = "white"))
 title(main = "Higher inequality or less development means higher homicide rates")
-with(indicators2005, text(HDI, gini, paste(Alpha_2, round(Homicide2005)), col = "orange", family = "xkcd"))
+with(indicators2005, text(HDI, gini, paste(Alpha_2, round(Homicide)), col = "orange", family = "xkcd"))
 text(0.85, 20, "High development + low inequality =\nlow murder rate", col = "white")
 text(0.35, 55, "Lower development + high inequality =\nhigh murder rate", col = "white")
 text(0.70, 60, "Highest murder rate is middle income countries with high inequality", col = "black")
@@ -60,7 +60,7 @@ text(0.70, 60, "Highest murder rate is middle income countries with high inequal
 
 myfunction <- function(x, i){
   the_data <- x[i, ]
-  hm3 <- lm(log(Homicide2005) ~ HDI * gini +  log(FirearmsPer100People2005), data = the_data)
+  hm3 <- lm(log(Homicide) ~ HDI * gini +  log(FirearmsPer100People2005), data = the_data)
   return(coef(hm3)["log(FirearmsPer100People2005)"])
 }
 
