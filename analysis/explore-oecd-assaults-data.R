@@ -1,4 +1,5 @@
-
+# deaths from assault per 100,000, age-standardised. data covers from 1960 to max year (currently 2014)
+#but since data not available prior to 1990 for many countries - choosing to plot from 1990 
 
 load("data/oecd_assaults.rda")
 load("data/oecd_assaults_sum.rda")
@@ -26,11 +27,11 @@ oecd_assaults_sum %>%
   # now we use that `tmp` object we created earlier:
   geom_text(data = tmp, aes(x = Value, colour = Sex), label = "|") +
   labs(y = "") +
-  scale_x_log10(("Deaths per 100,000 (logarithmic scale)")) +
+  scale_x_log10(("Age-standardised deaths per 100,000 (logarithmic scale)")) +
   theme(legend.position = "bottom") +
   scale_colour_manual("", values = c(Female = "red", Male = "blue")) +
   labs(colour = "") +
-  ggtitle(paste("Mean annual deaths from assault 1990 to", maxyear)) 
+  ggtitle(paste("Age-standardised mean annual deaths from assault per 100,000 from 1990 to", maxyear)) 
 )
 dev.off()
 
@@ -56,42 +57,11 @@ oecd_assaults_sum %>%
   # now we use that `tmp` object we created earlier:
   geom_text(data = tmp, aes(x = Value, colour = Sex), label = "|") +
   labs(y = "") +
-  scale_x_continuous(("Deaths per 100,000 (logarithmic scale)")) +
+  scale_x_continuous(("Age-standardised deaths per 100,000 (logarithmic scale)")) +
   theme(legend.position = "bottom") +
   scale_colour_manual("", values = c(Female = "red", Male = "blue")) +
   labs(colour = "") +
-  ggtitle(paste("Mean annual deaths from assault 1990 to", maxyear)) 
-)
-dev.off()
-
-#-----------order by female-------------
-png("output/oecd_assaults_nonlog_female_ordered.png", 1000, 800)
-# make a temporary version of the data that is longer, with a Sex variable
-# rather than a column for the values of each sex
-tmp <- oecd_assaults_sum %>%
-  filter(!Country %in% knockouts) %>%
-  select(Country, Male, Female) %>%
-  gather(Sex, Value, -Country)
-
-print(
-oecd_assaults_sum %>%
-  # which order to present in? Can be Population, Male or Female
-  filter(!Country %in% knockouts) %>%
-  arrange(Female) %>%
-  mutate(Country = factor(Country, levels = Country)) %>%
-  ggplot(aes(y = Country)) +
-  geom_segment(aes(yend = Country, x = Male, xend = Female),
-               colour = "white", size = 3) +
-  geom_text(size = 4, aes(label = Country, x = Population), alpha = 0.8,
-            family = "Calibri") +
-  # now we use that `tmp` object we created earlier:
-  geom_text(data = tmp, aes(x = Value, colour = Sex), label = "|") +
-  labs(y = "") +
-  scale_x_log10(("Deaths per 100,000 (logarithmic scale)")) +
-  theme(legend.position = "bottom") +
-  scale_colour_manual("", values = c(Female = "red", Male = "blue")) +
-  labs(colour = "") +
-  ggtitle(paste("Mean annual deaths from assault 1990 to", maxyear)) 
+  ggtitle(paste("Age-standardised mean annual deaths from assault per 100,000 from 1990 to", maxyear)) 
 )
 dev.off()
 
@@ -110,7 +80,7 @@ countriesin <- oecd_assaults_sum %>%
 
 print(
 oecd_assaults %>%
-  mutate(Unit = str_to_title(gsub("Deaths per 100 000 ", "", Unit)),
+  mutate(Unit = str_to_title(gsub("Age-standardised deaths per 100 000 ", "", Unit)),
          Unit = factor(Unit, levels = c("Females", "Population", "Males"))) %>%
   filter(Country %in% countriesin) %>%
   mutate(Country = factor(Country, levels = oecd_assaults_sum$Country)) %>%
@@ -121,8 +91,8 @@ oecd_assaults %>%
   scale_colour_manual("", values = c("red", "grey10", "steelblue")) +
   theme_grey(16, base_family = "Calibri") +
   theme(legend.position = "bottom") +
-  labs(y = "Deaths per 100,000 per year\n", 
-       title = paste0("Deaths per 100,000 from assault 1960 to ", maxyear, 
+  labs(y = "Age-standardised deaths per 100,000 per year\n", 
+       title = paste0("Age-standardised deaths from assault per 100,000 from 1960 to ", maxyear, 
                       ", in order of average rate since 2008")) +
   scale_x_continuous("", breaks = seq(1960, 2010, by = 10)) +
   coord_cartesian(ylim = c(0, 4))
@@ -159,12 +129,11 @@ p2 <- oecd_assaults %>%
   scale_colour_manual("", values = c("red", "grey10", "steelblue")) +
   theme_grey(16, base_family = "Calibri") +
   theme(legend.position = "bottom") +
-  labs(y = "Deaths per 100,000 per year\n", 
-       title = paste0("Deaths per 100,000 from assault 1960 to ", maxyear,
+  labs(y = "Age-standardised deaths per 100,000 per year\n", 
+       title = paste0("Age-standardised deaths from assault per 100,000 from 1960 to ", maxyear,
                       ", in order of average rate since 2008")) +
   scale_x_continuous("", breaks = seq(1960, 2010, by = 10)) +
   coord_cartesian(ylim = c(0, 4))
-
 
 totals4 <- oecd_assaults %>%
   filter(grepl("female", Unit)) %>%
@@ -187,8 +156,8 @@ p3 <- oecd_assaults %>%
   scale_colour_manual("", values = c("red", "grey10", "steelblue")) +
   theme_grey(16, base_family = "Calibri") +
   theme(legend.position = "none") +
-  labs(y = "Deaths per 100,000 per year", 
-       title = paste0("Female deaths per 100,000 from assault 1960 to ", maxyear,
+  labs(y = "Age-standardised deaths per 100,000 per year", 
+       title = paste0("Age-standardised female deaths from assault per 100,000 from 1960 to ", maxyear,
                       ", in order of average female rate since 2008")) +
   scale_x_continuous(breaks = seq(earlier, 2010, by = 10)) +
   labs(x = "\nNew Zealand's slower improvement in female deaths from assault means it now has the highest rate of the comparison countries in this chart.\n") +
@@ -209,4 +178,46 @@ CairoPDF("output/oecd_assaults_6countries_overtime.pdf", 16, 11)
   
   
 dev.off()
+
+#==== Modified non-log female ordered plot 1990-2014 ====
+
+# make a temporary version of the data that is longer, with a Sex variable
+# rather than a column for the values of each sex
+tmp <- oecd_assaults_sum %>%
+ # filter(!Country %in% knockouts) %>%
+  select(Country, Male, Female) %>%
+  gather(Sex, Value, -Country)
+
+p1 <-  oecd_assaults_sum %>%
+    # which order to present in? Can be Population, Male or Female
+   # filter(!Country %in% knockouts) %>%
+    arrange(Female) %>%
+    mutate(Country = factor(Country, levels = Country)) %>%
+    ggplot(aes(y = Country)) +
+    geom_segment(aes(yend = Country, x = Male, xend = Female),
+                 colour = "white", size = 3) +
+    #geom_text(size = 4, aes(label = Country, x = Population), alpha = 0.8,
+     #family = "Calibri") +
+    # now we use that `tmp` object we created earlier:
+    geom_text(data = tmp, aes(x = Value, colour = Sex), label = "|") +
+    labs(y = "") +
+    scale_x_continuous("Deaths per 100,000", breaks = 0:7 * 25) +
+    theme(legend.position = "bottom") +
+    scale_colour_manual("", values = c(Female = "red", Male = "blue")) +
+    ggtitle(paste("Age-standardised mean annual deaths from assault per 100,000 from 1990 to", maxyear)) 
+
+CairoPDF("output/1990-2014_oecd_assaults_nonlog_female_ordered-A4.pdf", 8.27, 11.69)
+print(p1)
+dev.off()
+
+CairoPDF("output/1990-2014_oecd_assaults_nonlog_female_ordered-A3.pdf", 16.53, 11.69)
+print(p1)
+dev.off()
+
+
+CairoPDF("output/1990-2014_oecd_assaults_log_female_ordered-A4.pdf", 8.27, 11.69)
+  print(p1 + scale_x_log10("Deaths per 100,000 (logarithmic scale)"))
+dev.off()
+
+CairoPDF()
 
