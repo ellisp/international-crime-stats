@@ -44,20 +44,17 @@ source("analysis/explore-oecd-assaults-data.R")
 knit("README.Rmd", output = "README.md")
 
 # Make HTML versions for local use:
-render("doc/suicide.Rmd")
-render("doc/indicators2005.Rmd")
-render("doc/hdi.Rmd")
-render("doc/sas_df2.Rmd")
-render("doc/oecd_assaults.Rmd")
-
+docs <- list.files("doc", "Rmd$", full.name = TRUE)
+analysis <- list.files("analysis", "Rmd$", full.name = TRUE)
+lapply(docs, render)
+lapply(analysis, render)
 
 # Make Markdown versions for use in the Wiki.  Note the Wiki needs to be independently cloned.
-knit("doc/indicators2005.Rmd", output = "../international-crime-stats.wiki/indicators2005.md")
-knit("doc/suicide.Rmd", output = "../international-crime-stats.wiki/suicide.md")
-knit("doc/hdi.Rmd", output = "../international-crime-stats.wiki/HDI.md")
-knit("doc/sas_df2.Rmd", output = "../international-crime-stats.wiki/sas_df2.md")
-knit("doc/oecd_assaults.Rmd", output = "../international-crime-stats.wiki/oecd_assaults.md")
-
+for(x in docs){
+  outfile <- gsub("^doc/", "../international-crime-stats.wiki/", x)
+  outfile <- gsub(".Rmd$", ".md", outfile)
+  knit(x, output = outfile)
+}
 
 # copy images needed by the markdown versions over to the Wiki repository:
 system("cp figure/*.* ../international-crime-stats.wiki/figure")
